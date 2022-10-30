@@ -1,0 +1,51 @@
+﻿@page
+@model Lab2_ChatApp.Pages.ChatModel
+@using Lab2_ChatApp.Entity
+@{
+    Layout = "_Layout";
+    ViewData["title"] = "Chat";
+
+    var chatId = ViewData["chatId"];
+    var username = ViewData["username"];
+    var messages = (List<Message>)ViewData["messages"];
+    var isIncluded = (Boolean)ViewData["isIncluded"];
+}
+
+@if(isIncluded){
+    <div class="row">
+        <div class="col-md-4">
+            <h3>Enter your message</h3>
+            <div>
+                <input type="button" id="startBtn" value="Start chat" />
+            </div>
+            <div>
+                <div>UserName</div>
+                <input type="text" id="myUserName" value="@username" readonly/>
+            </div>
+            <div>
+                <div>ChatId</div>
+                <input type="text" id="chatId" value="@chatId" readonly/>
+            </div>
+            <div>
+                <div>Message</div>
+                <input type="text" id="messageInput" />
+            </div>
+            <div>
+                <input type="button" id="sendButton" value="Send Message" />
+            </div>
+        </div>
+        <div class="col-md-8">
+            <ul id="messageList">
+                @foreach (var m in messages)
+                {
+                        <li>@m.User.Username says: @m.Content</li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    <script src="~/microsoft-signalr/signalr.min.js"></script>
+}
+else{
+    <h2>You're not allow to be here</h2>
+}

@@ -1,0 +1,100 @@
+﻿@page
+@model Lab2_ChatApp.Pages.HomeModel
+@using Lab2_ChatApp.Entity
+@addTagHelper *, WebApplication1
+@{
+    Layout = "_Layout";
+    ViewData["title"] = "Home";
+
+    var chats = (List<Chat>)ViewData["chats"];
+    var users = (List<User>)ViewData["users"];
+    var username = ViewData["username"];
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <h3>All Contact</h3>
+        <ul>
+            @foreach (var c in chats)
+            {
+                <li><a asp-area="" asp-page="/Chat" asp-route-chatId="@c.ChatId" asp-route-username="@username">@c.ChatName</a>
+                <span> (@c.ChatType)</span></li>
+            }
+        </ul>
+    </div>
+    <div class="col-md-8">
+        <h2>Start a Private Chat</h2>
+        <form method="post" asp-page-handler="Private">
+            <!-- Text input-->
+            <div class="form-group" hidden>
+                <label class="col-md-12 control-label">Chat Name</label>  
+                <div class="col-md-12">
+                    <input name="username" value="@username" class="form-control input-md" type="text">
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-12 control-label">Chat Name</label>  
+                <div class="col-md-12">
+                    <input name="chatName" placeholder="Name" class="form-control input-md" type="text">
+                </div>
+            </div>
+
+            <!-- Select input-->
+            <div class="form-group">
+                <label class="col-md-12 control-label">Type</label>  
+                <div class="col-md-12">
+                    <select name="user">
+                        @foreach(var u in users){
+                            <option value="@u.Username">@u.Username</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-success" />
+            </div>
+        </form>
+
+        <h2 class="mt-2">Start a Group Chat</h2>
+        <form method="post" asp-page-handler="Group">
+            <!-- Text input-->
+            <div class="form-group" hidden>
+                <label class="col-md-12 control-label">Chat Name</label>  
+                <div class="col-md-12">
+                    <input name="username" value="@username" class="form-control input-md" type="text">
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-12 control-label">Chat Name</label>  
+                <div class="col-md-12">
+                    <input name="chatName" placeholder="Name" class="form-control input-md" type="text">
+                </div>
+            </div>
+
+            <!-- Select input-->
+            <div class="form-group">
+                <label class="col-md-12 control-label">Type</label>  
+                <div class="col-md-12">
+                    <select name="users" multiple>
+                        @foreach (var u in users)
+                        {
+                            <option value="@u.UserId">@u.Username</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="~/microsoft-signalr/signalr.min.js"></script>
