@@ -21,18 +21,14 @@ namespace Lab2_ChatApp.Pages
             
         }
 
-        public IActionResult OnPost(String username, String password)
+        public void OnPost(String username, String password)
         {
-            User user = context.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
+            User user = new User();
+            user.Username = username;
+            user.Password = password;
 
-            int u = UserList.Users.Count;
-
-            if (user != null)
-            {
-                return Redirect("/Home?username="+user.Username);
-            }
-
-            return Redirect("/Index");
+            context.Users.Add(user);
+            context.SaveChanges();
         }
     }
 }

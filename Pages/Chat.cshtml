@@ -9,11 +9,15 @@
     var username = ViewData["username"];
     var messages = (List<Message>)ViewData["messages"];
     var isIncluded = (Boolean)ViewData["isIncluded"];
+
+    var isPrivate = (Boolean)ViewData["isPrivate"];
+    var users = (List<User>)ViewData["users"];
+    var userInChat = (List<User>)ViewData["userInChat"];
 }
 
 @if(isIncluded){
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <h3>Enter your message</h3>
             <div>
                 <input type="button" id="startBtn" value="Start chat" />
@@ -34,14 +38,85 @@
                 <input type="button" id="sendButton" value="Send Message" />
             </div>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-5">
             <ul id="messageList">
                 @foreach (var m in messages)
                 {
-                        <li>@m.User.Username says: @m.Content</li>
+                    <li>@m.User.Username says: @m.Content at @m.Timestamp.ToShortDateString() @m.Timestamp.ToShortTimeString()</li>
                 }
             </ul>
         </div>
+        <div class="col-md-2">
+            <form method="post" asp-page-handler="Leave">
+                <div class="form-group" hidden>
+                    <label class="col-md-12 control-label">Chat Name</label>  
+                    <div class="col-md-12">
+                        <input name="username" value="@username" class="form-control input-md" type="text">
+                    </div>
+                </div>
+
+                <!-- Text input-->
+                <div class="form-group" hidden>
+                    <label class="col-md-12 control-label">Chat Name</label>  
+                    <div class="col-md-12">
+                        <input name="chatId" value="@chatId" placeholder="Name" class="form-control input-md" type="text">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Leave Chat" class="btn btn-danger" @(username == null ? "disabled":"")/>
+                </div>
+            </form>
+            <h3>User In Chat</h3>
+            <ul id="messageList">
+             @foreach (var u in userInChat)
+            {
+                <li>@u.Username</li>
+            }
+            </ul>
+        </div>
+        @if(!isPrivate){
+            <div class="col-md-2">
+                <h3>Add User</h3>
+                <form method="post" asp-page-handler="Add">
+                    <!-- Text input-->
+                    <div class="form-group" hidden>
+                        <label class="col-md-12 control-label">Chat Name</label>  
+                        <div class="col-md-12">
+                            <input name="username" value="@username" class="form-control input-md" type="text">
+                        </div>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group" hidden>
+                        <label class="col-md-12 control-label">Chat Name</label>  
+                        <div class="col-md-12">
+                            <input name="chatId" value="@chatId" placeholder="Name" class="form-control input-md" type="text">
+                        </div>
+                    </div>
+
+                    <!-- Select input-->
+                    <div class="form-group">
+                        <label class="col-md-12 control-label">Type</label>  
+                        <div class="col-md-12">
+                            <select name="users" multiple>
+                                @if (users != null)
+                                {
+                                    @foreach (var u in users)
+                                    {
+                                        <option value="@u.UserId">@u.Username</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Add Users" class="btn btn-success" @(username == null ? "disabled":"")/>
+                    </div>
+                </form>
+            </div>
+        }
     </div>
 
     <script src="~/microsoft-signalr/signalr.min.js"></script>
